@@ -1,4 +1,4 @@
-from towhee import pipe, ops
+from towhee import pipe,ops
 
 
 class Resnet50:

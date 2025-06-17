@@ -8,4 +8,4 @@ p = (
 )
 
 # 使用假数据触发 Operator 下载
-p('https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/beignets-task-guide.png ')
+p('./beignets-task-guide.png')

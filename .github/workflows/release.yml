@@ -11,7 +11,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Setup Python
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.8'
@@ -19,8 +19,20 @@ jobs:
     - name: Install dependencies
       run: pip install towhee timm opencv-python
 
-    - name: Generate Operators
-      run: python generate_ops.py
+    - name: Generate Towhee Operators
+      run: |
+        # 生成一个脚本，调用 pipeline 拉取所需 operators
+        echo "from towhee import pipe, ops\n"\
+             "p = pipe.input('path')\\\n"\
+             "    .map('path', 'img', ops.image_decode.cv2_rgb())\\\n"\
+             "    .map('img', 'embedding', ops.image_embedding.timm(model_name='resnet50'))\\\n"\
+             "    .output('embedding')\n"\
+             "try:\n"\
+             "    p('./fake.jpg')\n"\
+             "except Exception as e:\n"\
+             "    print('Expected error (no image), but ops should be pulled:', e)" > generate_ops.py
+
+        python generate_ops.py
 
     - name: Archive Operators
       run: |
@@ -28,6 +40,12 @@ jobs:
         cp -r ~/.towhee/operators/image-decode towhee_ops/
         cp -r ~/.towhee/operators/image-embedding towhee_ops/
         tar czvf towhee_ops.tar.gz towhee_ops
+
+    - name: Upload artifact (optional)
+      uses: actions/upload-artifact@v3
+      with:
+        name: towhee_ops
+        path: towhee_ops.tar.gz
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1

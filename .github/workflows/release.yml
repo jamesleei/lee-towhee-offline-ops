@@ -25,8 +25,7 @@ jobs:
     - name: Archive Operators
       run: |
         mkdir -p towhee_ops
-        cp -r ~/.towhee/operators/image-decode towhee_ops/
-        cp -r ~/.towhee/operators/image-embedding towhee_ops/
+        cp -r ~/.towhee towhee_ops/
         tar czvf towhee_ops.tar.gz towhee_ops
 
     - name: Create GitHub Release

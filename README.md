@@ -1,59 +1,15 @@
-# cloudflare-helm-proxy
+# Towhee Offline Operators
 
-![deploy](https://github.com/ciiiii/cloudflare-helm-proxy/actions/workflows/deploy.yml/badge.svg)
+This repo packages Towhee Operators (`cv2-rgb`, `timm`) using GitHub Actions.
 
-A helm repo proxy run on cloudflare worker.
+## 🛠️ How to use
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ciiiii/cloudflare-helm-proxy)
-
-> If you're looking for proxy for docker, maybe you can try [cloudflare-docker-proxy](https://github.com/ciiiii/cloudflare-docker-proxy).
-
-## Rules example
-- request based on `${cloudflare_worker_route}/${key}` will request to `${url}`.
-- text of `*/index.yaml` will be handled with replaces rules.
-- `$host` in replaces will be replace with cloudflare worker route.
-```javascript
-const routes = {
-  stable: {
-    url: 'https://charts.helm.sh/stable',
-    replaces: {
-      'charts.helm.sh': '$host',
-    },
-  },
-  incubator: {
-    url: 'https://charts.helm.sh/incubator',
-    replaces: {
-      'charts.helm.sh': '$host',
-    },
-  },
-  grafana: {
-    url: 'https://grafana.github.io/helm-charts',
-    replaces: {
-      'github.com': 'hub.fastgit.org',
-    },
-  },
-  prometheus: {
-    url: 'https://prometheus-community.github.io/helm-charts',
-    replaces: {
-      'prometheus-community.github.io/helm-charts': '$host/prometheus',
-    },
-  },
-  'k8s-at-home': {
-    url: 'https://k8s-at-home.com/charts/',
-    replaces: {
-      'github.com': 'hub.fastgit.org',
-    },
-  },
-}
-```
-
-## Usage example
-```bash
-# helm usage
-helm repo add stable https://${cloudflare_worker_route}/stable
-helm search repo stable/zetcd
-
-# curl test
-curl https://${cloudflare_worker_route}/stable/index.yaml
-curl https://${cloudflare_worker_route}/stable/packages/zetcd-0.1.2.tgz
-```
+1. Go to **Actions** tab and manually run workflow **Build and Release Towhee Operators**.
+2. After it completes, go to **Releases** and download `towhee_ops.tar.gz`.
+3. On your internal machine (Windows/Linux):
+   ```bash
+   wget <release-download-url>
+   tar xzf towhee_ops.tar.gz
+   # Or use 7-Zip on Windows
+   set TOWHEE_OP_PATH=C:\path\to\towhee_ops
+   pip install towhee timm opencv-python

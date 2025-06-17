@@ -38,8 +38,8 @@ jobs:
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: 'v1.0.2'
-        name: 'Towhee Operators v1.0.2'
+        tag_name: 'v1.0.3'
+        name: 'Towhee Operators v1.0.3'
         files: towhee_ops.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

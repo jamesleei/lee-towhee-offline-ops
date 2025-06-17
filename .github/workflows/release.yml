@@ -24,16 +24,20 @@ jobs:
     - name: Generate Operators
       run: python generate_ops.py
 
-    - name: Archive Operators
+    - name: copy real files
       run: |
-        mkdir -p towhee_ops
-        cp -r ~/.towhee towhee_ops/
+        mkdir -p towhee_ops/.towhee
+        rsync -aL ~/.towhee/ towhee_ops/.towhee/
+        cp requirements.txt towhee_ops/
+        
+    - name: create tar.gz without symlinks
+      run: |
         tar czvf towhee_ops.tar.gz towhee_ops
-
+        
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: 'v1.0.0'
+        tag_name: 'v1.0.1'
         name: 'Towhee Operators v1.0.0'
         files: towhee_ops.tar.gz
       env:

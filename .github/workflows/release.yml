@@ -28,7 +28,7 @@ jobs:
       run: |
         mkdir -p towhee_ops/.towhee
         rsync -aL ~/.towhee/ towhee_ops/.towhee/
-        rsync -aL ~/.cache/ towhee_ops/.cache/
+        rsync -aL ~/.cache/huggingface towhee_ops/.cache/
         cp requirements.txt towhee_ops/
         
     - name: create tar.gz without symlinks

@@ -1,0 +1,39 @@
+name: Build and Release Towhee Operators
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: pip install towhee timm opencv-python
+
+    - name: Generate Operators
+      run: python generate_ops.py
+
+    - name: Archive Operators
+      run: |
+        mkdir -p towhee_ops
+        cp -r ~/.towhee/operators/image-decode towhee_ops/
+        cp -r ~/.towhee/operators/image-embedding towhee_ops/
+        tar czvf towhee_ops.tar.gz towhee_ops
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: 'v1.0.0'
+        name: 'Towhee Operators v1.0.0'
+        files: towhee_ops.tar.gz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

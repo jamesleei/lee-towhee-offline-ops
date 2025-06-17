@@ -21,7 +21,6 @@ jobs:
 
     - name: Generate Towhee Operators
       run: |
-        # 生成一个脚本，调用 pipeline 拉取所需 operators
         echo "from towhee import pipe, ops\n"\
              "p = pipe.input('path')\\\n"\
              "    .map('path', 'img', ops.image_decode.cv2_rgb())\\\n"\
@@ -41,8 +40,8 @@ jobs:
         cp -r ~/.towhee/operators/image-embedding towhee_ops/
         tar czvf towhee_ops.tar.gz towhee_ops
 
-    - name: Upload artifact (optional)
-      uses: actions/upload-artifact@v3
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
       with:
         name: towhee_ops
         path: towhee_ops.tar.gz
